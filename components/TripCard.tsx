@@ -1,22 +1,31 @@
-import { StyleSheet, Text, View } from 'react-native';
-
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import RatingStars from './RatingStars';
 
-export interface TripCardProps {
+type Trip = {
+  id: string;
   title: string;
   destination: string;
   date: string;
   rating: number;
-}
+};
 
-export default function TripCard({ title, destination, date, rating }: TripCardProps) {
+type Props = {
+  trip: Trip;
+  onDelete: (id: string) => void;
+};
+
+export default function TripCard({ trip, onDelete }: Props) {
   return (
     <View style={styles.card}>
-      <Text style={styles.title}>{title}</Text>
-      <Text style={styles.meta}>
-        {destination} | {date}
-      </Text>
-      <RatingStars rating={rating} />
+      <View style={styles.header}>
+        <Text style={styles.title}>{trip.title}</Text>
+        <TouchableOpacity onPress={() => onDelete(trip.id)} style={styles.deleteBtn}>
+          <Text style={styles.deleteText}>✕</Text>
+        </TouchableOpacity>
+      </View>
+      <Text style={styles.destination}>📍 {trip.destination}</Text>
+      <Text style={styles.date}>🗓 {trip.date}</Text>
+      <RatingStars rating={trip.rating} />
     </View>
   );
 }
@@ -24,21 +33,28 @@ export default function TripCard({ title, destination, date, rating }: TripCardP
 const styles = StyleSheet.create({
   card: {
     backgroundColor: '#fff',
+    borderRadius: 12,
     padding: 16,
-    borderRadius: 32,
     marginBottom: 12,
     shadowColor: '#000',
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.08,
     shadowRadius: 8,
     elevation: 3,
   },
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#1a1a2e',
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 6,
   },
-  meta: {
-    fontSize: 14,
-    color: '#888',
+  title: { fontSize: 17, fontWeight: '700', flex: 1 },
+  deleteBtn: {
+    backgroundColor: '#fee2e2',
+    borderRadius: 6,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
   },
+  deleteText: { color: '#ef4444', fontWeight: '700', fontSize: 13 },
+  destination: { fontSize: 14, color: '#6b7280', marginBottom: 4 },
+  date: { fontSize: 14, color: '#6b7280', marginBottom: 8 },
 });
